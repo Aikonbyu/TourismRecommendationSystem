@@ -46,3 +46,17 @@ def get_destinations_by_name(name):
 
     connection.close_db(connect, cursor)
     return pd.DataFrame(result, columns=columns)
+
+def get_destination_by_id(id):
+    connect, cursor = connection.connect_db()
+    query = """
+        SELECT name, description, imageURL FROM destinations WHERE id = %s
+    """
+    cursor.execute(query, (id,))
+    result = cursor.fetchall()
+    name = result[1]
+    description = result[2]
+    imageURL = result[9]
+
+    connection.close_db(connect, cursor)
+    return name, description, imageURL
