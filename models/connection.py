@@ -28,5 +28,6 @@ def connect_db():
     return connection, cursor
 
 def close_db(connection, cursor):
+    print("Closing database connection...")
     cursor.close()
     connection.close()

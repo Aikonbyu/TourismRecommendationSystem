@@ -9,5 +9,6 @@ def logout():
     if confirm_logout:
         st.session_state['login_status'] = False
         st.session_state['active_page'] = "Home"
+        st.session_state['userID'] = None
     if cencel_logout:
         st.session_state['active_page'] = "Home"

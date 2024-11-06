@@ -15,5 +15,34 @@ def get_destinations_data():
     """
     cursor.execute(query)
     results = cursor.fetchall()
+    columns = [
+        "id", "name", "description", "domesticPrice", "foreignPrice", "village", 
+        "subDistrict", "district", "userID", "imageURL", "categories", "facilities"
+    ]
+
     connection.close_db(connect, cursor)
-    return pd.DataFrame(results)
+    return pd.DataFrame(results, columns=columns)
+
+def get_destinations_by_name(name):
+    connect, cursor = connection.connect_db()
+    name = name.lower().strip()
+    query = """
+        SELECT destinations.*, GROUP_CONCAT(DISTINCT categories.name) AS categories,
+        GROUP_CONCAT(DISTINCT facilities.name) AS facilities
+        FROM destinations
+        LEFT JOIN destination_categories ON destinations.id = destination_categories.destinationId
+        LEFT JOIN categories ON destination_categories.categoryId = categories.id
+        LEFT JOIN destination_facilities ON destinations.id = destination_facilities.destinationId
+        LEFT JOIN facilities ON destination_facilities.facilityId = facilities.id
+        WHERE LOWER(destinations.name) LIKE %s
+        GROUP BY destinations.id
+    """
+    cursor.execute(query, (f"%{name}%",))
+    result = cursor.fetchall()
+    columns = [
+        "id", "name", "description", "domesticPrice", "foreignPrice", "village", 
+        "subDistrict", "district", "userID", "imageURL", "categories", "facilities"
+    ]
+
+    connection.close_db(connect, cursor)
+    return pd.DataFrame(result, columns=columns)
