@@ -2,14 +2,15 @@ import streamlit as st
 
 def login():
     st.title("Sistem Rekomendasi Pariwisata Kabupaten Tabanan")
-    st.write("Welcome to the recommendation system for tourism in Tabanan Regency! Please log in to continue.")
+    st.write("Silahkan login terlebih dahulu")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
         if username == "admin" and password == "admin":
-            st.success("Login successful!")
-            st.write("You are now logged in.")
+            st.session_state['active_page'] = "Data Pariwisata"
+            st.session_state['login_status'] = True
             return True
         else:
-            st.error("Login failed. Please try again.")
-    return False
+            st.error("Login gagal")
+            st.session_state['login_status'] = False
+            return False
